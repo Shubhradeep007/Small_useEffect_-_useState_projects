@@ -17,7 +17,6 @@ const EmailSearch = () => {
     const timerId = setTimeout(async () => {
       setLoading(true);
       setError(null);
-      setResults([]);
 
       try {
         const response = await axios.get(

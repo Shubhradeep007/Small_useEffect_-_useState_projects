@@ -13,10 +13,10 @@ import {
 } from "@mui/material";
 
 const DebouncedSearch = () => {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setErros] = useState(null);
+  const [query, setQuery] = useState(""); // input
+  const [results, setResults] = useState([]); // api data
+  const [loading, setLoading] = useState(false);  // loader
+  const [error, setErros] = useState(null); // error 
 
   useEffect(() => {
     if (query.trim() === "") {

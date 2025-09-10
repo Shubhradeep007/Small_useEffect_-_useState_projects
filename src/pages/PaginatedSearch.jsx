@@ -36,10 +36,8 @@ const PaginatedSearch = () => {
       setHasMore(false);
       return;
     }
-
     setLoading(true);
     setError(null);
-
     try {
       const response = await axios.get(
         `https://jsonplaceholder.typicode.com/posts?q=${currentQuery}&_page=${currentPage}&_limit=10`

@@ -15,10 +15,10 @@ import {
 import AutorenewIcon from "@mui/icons-material/Autorenew"; // An icon for the button
 
 const Randomjoke = () => {
-  const [joke, setJoke] = useState({});
-  const [countdown, setCountdown] = useState(10);
+  const [joke, setJoke] = useState({}); // store the data 
+  const [countdown, setCountdown] = useState(10); // set coundown
   const [loading, setLoading] = useState(true); // Start with loading true
-  const jokeIntervalRef = useRef(null);
+  const jokeIntervalRef = useRef(null); // refernce variable 
 
   const fetchData = async () => {
     try {
@@ -43,7 +43,10 @@ const Randomjoke = () => {
 
   useEffect(() => {
     fetchData();
+    
     jokeIntervalRef.current = setInterval(fetchData, 10000);
+    
+    // descrise timer 
     const countdownInterval = setInterval(() => {
       setCountdown((prevCountdown) =>
         prevCountdown > 0 ? prevCountdown - 1 : 0
@@ -71,6 +74,7 @@ const Randomjoke = () => {
               onClick={handleNextJokeClick}
               disabled={loading}
               startIcon={<AutorenewIcon />}
+              
             >
               Get New Joke
             </Button>
