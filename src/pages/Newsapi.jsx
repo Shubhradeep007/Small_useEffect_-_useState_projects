@@ -1,3 +1,4 @@
+import { Image } from "@mui/icons-material";
 import { Link } from "@mui/material";
 import axios from "axios";
 import React, { useEffect } from "react";
@@ -10,10 +11,9 @@ const Newsapi = () => {
   const [loading, setLoading] = useState(false);
 
   const categories = [
-    { Label: "Business", value: "Business" },
-    { Label: "Entertainment", value: "Entertainment" },
-    { Label: "General", value: "General" },
-    { Label: "Health", value: "Health" },
+    { Label: "Technology", value: "technology" },
+    { Label: "Sports", value: "sports" },
+    { Label: "Politics", value: "politics" },
   ];
   useEffect(() => {
     fetchData();
@@ -74,6 +74,9 @@ const Newsapi = () => {
               marginTop: "10px",
             }}
           >
+
+           <img src={value.urlToImage} alt={value.title} style={{width: "300px", height:"150px"}}/>
+
             <a href={value.url}>
               <h5>{value.title}</h5>
             </a>
