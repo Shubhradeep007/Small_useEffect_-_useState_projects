@@ -14,8 +14,9 @@ import {
   ListItemText,
   Link,
   Stack,
+  IconButton,
 } from "@mui/material";
-import { GitHub, OpenInNew } from "@mui/icons-material";
+import { GitHub, OpenInNew, Star, ForkRight } from "@mui/icons-material";
 
 const GithubApp = () => {
   const [username, setUsername] = useState("");
@@ -43,7 +44,7 @@ const GithubApp = () => {
       setUserData(userResponse.data);
 
       const reposResponse = await axios.get(
-        `https://api.github.com/users/${username}/repos`
+        `https://api.github.com/users/${username}/repos?sort=updated&direction=desc`
       );
       setRepos(reposResponse.data);
     } catch (err) {
@@ -70,7 +71,7 @@ const GithubApp = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "#f0f2f5",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -85,14 +86,14 @@ const GithubApp = () => {
           backgroundColor: "white",
           p: 4,
           borderRadius: "8px",
-          boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
         }}
       >
         <Typography
           variant="h5"
           component="h1"
           gutterBottom
-          sx={{ textAlign: "center" }}
+          sx={{ textAlign: "center", fontWeight: "bold" }}
         >
           GitHub Profile Finder
         </Typography>
@@ -105,12 +106,21 @@ const GithubApp = () => {
             onChange={(e) => setUsername(e.target.value)}
             onKeyPress={handleKeyPress}
           />
-          <Button variant="contained" onClick={fetchData} endIcon={<GitHub />}>
+          <Button
+            variant="contained"
+            onClick={fetchData}
+            disabled={loading}
+            endIcon={<GitHub />}
+          >
             Search
           </Button>
         </Stack>
 
-        {loading && <CircularProgress sx={{ mt: 2 }} />}
+        {loading && (
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <CircularProgress />
+          </Box>
+        )}
         {error && (
           <Alert severity="error" sx={{ mt: 2 }}>
             {error}
@@ -129,9 +139,13 @@ const GithubApp = () => {
             >
               <Avatar
                 src={userData.avatar_url}
-                sx={{ width: 100, height: 100 }}
+                sx={{ width: 100, height: 100, mb: 2 }}
               />
-              <Typography variant="h6" component="h2" sx={{ mt: 2 }}>
+              <Typography
+                variant="h6"
+                component="h2"
+                sx={{ fontWeight: "bold" }}
+              >
                 {userData.name || userData.login}
               </Typography>
               {userData.bio && (
@@ -160,35 +174,68 @@ const GithubApp = () => {
             </Stack>
 
             <Box sx={{ textAlign: "center", mb: 4 }}>
-              <Link
+              <Button
                 href={userData.html_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                sx={{ display: "inline-flex", alignItems: "center" }}
+                variant="outlined"
+                size="small"
+                endIcon={<OpenInNew />}
               >
-                View Profile <OpenInNew sx={{ ml: 0.5, fontSize: 16 }} />
-              </Link>
+                View Profile
+              </Button>
             </Box>
 
             <Typography variant="h6" component="h3" gutterBottom>
               Repositories ({repos.length})
             </Typography>
             {repos.length > 0 ? (
-              <List sx={{ maxHeight: 200, overflow: "auto" }}>
+              <List sx={{ maxHeight: 240, overflow: "auto" }}>
                 {repos.map((repo) => (
-                  <ListItem key={repo.id} disablePadding>
+                  <ListItem
+                    key={repo.id}
+                    disablePadding
+                    sx={{
+                      mb: 1,
+                      p: 1.5,
+                      border: "1px solid #ddd",
+                      borderRadius: "4px",
+                    }}
+                  >
                     <ListItemText
                       primary={repo.name}
                       secondary={repo.description}
+                      primaryTypographyProps={{ fontWeight: "bold" }}
                     />
-                    <Link
-                      href={repo.html_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      spacing={2}
                       sx={{ ml: 2 }}
                     >
-                      View
-                    </Link>
+                      <Stack direction="row" alignItems="center" spacing={0.5}>
+                        <Star sx={{ fontSize: 16, color: "text.secondary" }} />
+                        <Typography variant="body2" color="text.secondary">
+                          {repo.stargazers_count}
+                        </Typography>
+                      </Stack>
+                      <Stack direction="row" alignItems="center" spacing={0.5}>
+                        <ForkRight
+                          sx={{ fontSize: 16, color: "text.secondary" }}
+                        />
+                        <Typography variant="body2" color="text.secondary">
+                          {repo.forks_count}
+                        </Typography>
+                      </Stack>
+                      <IconButton
+                        href={repo.html_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        size="small"
+                      >
+                        <OpenInNew sx={{ fontSize: 20 }} />
+                      </IconButton>
+                    </Stack>
                   </ListItem>
                 ))}
               </List>
